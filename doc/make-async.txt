@@ -4,29 +4,23 @@ Execute make (or another program) without blocking Neovim and output to
 QuickFix. Interrupt the build command with `CTRL-c`.
 
 ==============================================================================
-CONTENTS                                                     *MakeAsyncContents*
+CONTENTS                                                   *make-async-contents*
 
-    1. Configuration ........ |MakeAsyncConfiguration|
-    2. Usage ................ |MakeAsyncUsage|
-    3. Commands ............. |MakeAsyncCommands|
-    4. Mappings ............. |MakeAsyncMappings|
-    5. Development .......... |MakeAsyncDevelopment|
+    1. Configuration ........ |make-async-configuration|
+    2. Usage ................ |make-async-usage|
+    3. Commands ............. |make-async-commands|
+    4. Mappings ............. |make-async-mappings|
+    5. Development .......... |make-async-development|
 
 ==============================================================================
-Section 1: Configuration                                *MakeAsyncConfiguration*
+Section 1: Configuration                              *make-async-configuration*
 
 The plugin is written in Lua and need to be activated with the following call: >
 
     require'make-async'.setup {}
 <
 ==============================================================================
-Section 2: Usage                                                *MakeAsyncUsage*
-
-This plugin is intended to improve the built-in `:make` command, which is
-blocking the UI updates. The build command will run just like with `:make`,
-populating the |quickfix| with the commands output. The output will be parsed
-with |errorformat| to allow jumping between errors.
-Section 1: Usage                                                *MakeAsyncUsage*
+Section 2: Usage                                              *make-async-usage*
 
 This plugin is intended to improve the built-in `:make` command, which is
 blocking the UI updates. The build command will run just like with `:make`,
@@ -49,21 +43,23 @@ To interrupt the build, press |CTRL-c| in the quickfix window.
 
 
 ==============================================================================
-Section 3: Commands                                          *MakeAsyncCommands*
+Section 3: Commands                                        *make-async-commands*
 
                                                                    *:X*
+                                                                   *async-:X*
+                                                                   *make-async-:X*
 :X [command]            Start build command, open quickfix window.
 
 
 ==============================================================================
-Section 4: Mappings                                          *MakeAsyncMappings*
+Section 4: Mappings                                        *make-async-mappings*
 
 The following mappings are defined initially.
 
 <leader>mm             Run the |'makeprg'| command.
 
 ==============================================================================
-Section 5: Development                                    *MakeAsyncDevelopment*
+Section 5: Development                                  *make-async-development*
 
 - The plugin was extracted from my personal configuration, and may be not so
   configurable. It's supposed to be forked and code modified for personal
