@@ -1,4 +1,4 @@
-*make-async.txt*  Asynchronous make in Neovim
+*make-async.txt*  Asynchronous make in Neovim   *make-async* *MakeAsync*
 
 Execute make (or another program) without blocking Neovim and output to
 QuickFix. Interrupt the build command with `CTRL-c`.
