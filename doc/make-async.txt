@@ -1,0 +1,72 @@
+*make-async.txt*  Asynchronous make in Neovim
+
+Execute make (or another program) without blocking Neovim and output to
+QuickFix. Interrupt the build command with `CTRL-c`.
+
+==============================================================================
+CONTENTS                                                     *MakeAsyncContents*
+
+    1. Configuration ........ |MakeAsyncConfiguration|
+    2. Usage ................ |MakeAsyncUsage|
+    3. Commands ............. |MakeAsyncCommands|
+    4. Mappings ............. |MakeAsyncMappings|
+    5. Development .......... |MakeAsyncDevelopment|
+
+==============================================================================
+Section 1: Configuration                                *MakeAsyncConfiguration*
+
+The plugin is written in Lua and need to be activated with the following call: >
+
+    require'make-async'.setup {}
+<
+==============================================================================
+Section 2: Usage                                                *MakeAsyncUsage*
+
+This plugin is intended to improve the built-in `:make` command, which is
+blocking the UI updates. The build command will run just like with `:make`,
+populating the |quickfix| with the commands output. The output will be parsed
+with |errorformat| to allow jumping between errors.
+Section 1: Usage                                                *MakeAsyncUsage*
+
+This plugin is intended to improve the built-in `:make` command, which is
+blocking the UI updates. The build command will run just like with `:make`,
+populating the |quickfix| with the commands output. The output will be parsed
+with |errorformat| to allow jumping between errors.
+
+First define |'makeprg'|: >
+
+    :set makeprg=./gradlew\ assemble
+<
+Then hit `<leader>mm` to kick off the build. The quickfix window will popup
+automatically, displaying moving circular progress while the build command is
+running. The output will be immediately displayed in the quickfix window.
+
+Alternatively, the build can be started without |'makeprg'|: >
+
+    :X ./gradlew assemble
+<
+To interrupt the build, press |CTRL-c| in the quickfix window.
+
+
+==============================================================================
+Section 3: Commands                                          *MakeAsyncCommands*
+
+                                                                   *:X*
+:X [command]            Start build command, open quickfix window.
+
+
+==============================================================================
+Section 4: Mappings                                          *MakeAsyncMappings*
+
+The following mappings are defined initially.
+
+<leader>mm             Run the |'makeprg'| command.
+
+==============================================================================
+Section 5: Development                                    *MakeAsyncDevelopment*
+
+- The plugin was extracted from my personal configuration, and may be not so
+  configurable. It's supposed to be forked and code modified for personal
+  experience. It's a script anyway.
+
+ vim: set tw=78 ts=8 ft=help norl:

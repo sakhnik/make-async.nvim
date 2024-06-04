@@ -1,7 +1,8 @@
 # make-async.nvim
 
 Execute make (or any shell command) without blocking Neovim and output to QuickFix.
-This is especially useful for long-running builds, like with gradle.
+Useful for long-running builds, especially with gradle. The QuickFix window will popup
+automatically. The build can be interrupted with the conventional keystroke `CTRL-c`.
 
 # Installation
 
