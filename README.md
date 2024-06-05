@@ -32,7 +32,7 @@ Then kick off the build:
 
 Or the same with a key mapping `<leader>mm`.
 
-## A random shell command
+## Arbitrary shell command
 
 If a shell command is to be executed without modifying `makeprg`, try this:
 
