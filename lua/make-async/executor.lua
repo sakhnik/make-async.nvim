@@ -29,18 +29,24 @@ local function filter_out_controls(line)
     return line:gsub('\x1B[@-_][0-?]*[ -/]*[@-~]', '')
 end
 
----Jump to the bottom of the window if open
-function Executor:jump_to_bottom()
+---Execute action and jump to bottom if the window is visible and cursor was on the last line
+---@param action function(): nil Action to update the quickfix window
+function Executor:with_jump_to_bottom(action)
   -- If the quickfix window has been closed, check if there's another window with quickfix
   if not vim.api.nvim_win_is_valid(self.winnr) then
     local windows = vim.fn.win_findbuf(self.bufnr)
-    if #windows == 0 then return end  -- no quickfix window at the moment
+    if #windows == 0 then return action() end  -- no quickfix window at the moment
     self.winnr = windows[1]
   end
   -- Put cursor to the end of the quickfix window
   local num_lines = vim.api.nvim_buf_line_count(self.bufnr)
-  local _, col = unpack(vim.api.nvim_win_get_cursor(self.winnr))
-  vim.api.nvim_win_set_cursor(self.winnr, {num_lines, col})
+  local cursor_line, col = unpack(vim.api.nvim_win_get_cursor(self.winnr))
+  action()
+  -- If the cursor was on the last line, follow the buffer
+  if num_lines == cursor_line then
+    num_lines = vim.api.nvim_buf_line_count(self.bufnr)
+    vim.api.nvim_win_set_cursor(self.winnr, {num_lines, col})
+  end
 end
 
 ---Stop the job
@@ -103,38 +109,38 @@ function Executor:execute(command_provider)
   local function on_event(job_id, data, event)
     if self.job_id ~= job_id then return end
 
-    if event == "stdout" or event == "stderr" then
-      -- If only one chunk, it's a part of a line
-      if #data == 1 then
-        partial_chunk = partial_chunk .. data[1]
-      else
-        for i, chunk in ipairs(data) do
-          -- Take into account potentially unfinished lines in the previous bunch of output
-          if i == 1 then
-            self.append_func(self:get_phase_title(cmd), {filter_out_controls(partial_chunk .. chunk)})
-            partial_chunk = ''
-          elseif i == #data then
-            -- Just remember the last chunk
-            partial_chunk = chunk
-          else
-            -- Output immediately complete lines
-            self.append_func(self:get_phase_title(cmd), {filter_out_controls(chunk)})
+    self:with_jump_to_bottom(function()
+      if event == "stdout" or event == "stderr" then
+        -- If only one chunk, it's a part of a line
+        if #data == 1 then
+          partial_chunk = partial_chunk .. data[1]
+        else
+          for i, chunk in ipairs(data) do
+            -- Take into account potentially unfinished lines in the previous bunch of output
+            if i == 1 then
+              self.append_func(self:get_phase_title(cmd), {filter_out_controls(partial_chunk .. chunk)})
+              partial_chunk = ''
+            elseif i == #data then
+              -- Just remember the last chunk
+              partial_chunk = chunk
+            else
+              -- Output immediately complete lines
+              self.append_func(self:get_phase_title(cmd), {filter_out_controls(chunk)})
+            end
           end
         end
+      elseif event == "exit" then
+        vim.fn.timer_stop(self.timer_id)
+        self.timer_id = -1
+        if partial_chunk ~= '' then
+          self.append_func(cmd, {filter_out_controls(partial_chunk)})
+        else
+          self.append_func(cmd, {})
+        end
+        self:del_keymap()
+        --vim.api.nvim_command("doautocmd QuickFixCmdPost")
       end
-      self:jump_to_bottom()
-    elseif event == "exit" then
-      vim.fn.timer_stop(self.timer_id)
-      self.timer_id = -1
-      if partial_chunk ~= '' then
-        self.append_func(cmd, {filter_out_controls(partial_chunk)})
-        self:jump_to_bottom()
-      else
-        self.append_func(cmd, {})
-      end
-      self:del_keymap()
-      --vim.api.nvim_command("doautocmd QuickFixCmdPost")
-    end
+    end)
   end
 
   self.job_id = vim.fn.jobstart(cmd, {

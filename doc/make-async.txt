@@ -41,6 +41,10 @@ Alternatively, the build can be started without |'makeprg'|: >
 <
 To interrupt the build, press |CTRL-c| in the quickfix window.
 
+If the cursor is on the last line of the quickfix window, the command output
+will be followed, i.e., the cursor will alway move to the last line
+automatically. Buf if the cursor is not on the last line, it'll stay still
+where it currently is.
 
 ==============================================================================
 Section 3: Commands                                        *make-async-commands*
