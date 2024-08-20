@@ -32,6 +32,8 @@ Then kick off the build:
 
 Or the same with a key mapping `<leader>mm`.
 
+Also a shortcut command is defined `:Make`, `:Make test` etc.
+
 ## Arbitrary shell command
 
 If a shell command is to be executed without modifying `makeprg`, try this:

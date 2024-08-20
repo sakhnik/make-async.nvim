@@ -31,9 +31,10 @@ First define |'makeprg'|: >
 
     :set makeprg=./gradlew\ assemble
 <
-Then hit `<leader>mm` to kick off the build. The quickfix window will popup
-automatically, displaying moving circular progress while the build command is
-running. The output will be immediately displayed in the quickfix window.
+Then hit `<leader>mm` or execute `:Make` to kick off the build. The quickfix
+window will popup automatically, displaying moving circular progress while the
+build command is running. The output will be immediately displayed in the
+quickfix window.
 
 Alternatively, the build can be started without |'makeprg'|: >
 
@@ -48,6 +49,11 @@ where it currently is.
 
 ==============================================================================
 Section 3: Commands                                        *make-async-commands*
+
+                                                                   *:Make*
+                                                                   *async-:Make*
+                                                                   *make-async-:Make*
+:Make [args]            Start |'makeprg'| command, open quickfix window.
 
                                                                    *:X*
                                                                    *async-:X*
