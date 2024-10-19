@@ -19,6 +19,7 @@ function MakeAsync.get_make_cmd()
 end
 
 function MakeAsync.make()
+  vim.cmd("wa")
   MakeAsync.qf:execute(function()
     return MakeAsync.get_make_cmd()
   end)
